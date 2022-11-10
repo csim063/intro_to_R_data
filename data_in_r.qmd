@@ -1,0 +1,243 @@
+---
+title: "Data in R"
+format: html
+editor: visual
+theme: darkly
+---
+
+## Paths
+
+> Directories are locations for storing files, or other directories, on your computer. Often referred to as folders.
+
+Individual files are referenced by using a directory tree which lists all the directories entered and the name of the desired from a given starting point.
+
+![](figures/directory_tree.png){width="353"}
+
+The series of directories entered to get to a file is called a path. There are two ways to reference a file's path
+
+1.  **Absolute**
+
+    This type of path specifies the location of the file from the start of the tree, the *root* directory. E.g.
+
+    `C:/work_stuff/research/ecology/actually_working_models/please_work_model_992.R`
+
+    -   Note that in R and any Unix system the `/` is used to enter directories, in windows file manager `\` is used.
+
+2.  **Relative**
+
+    This type of path is relative to the present working directory. E.g. if I open R or a terminal in `actually_working_models/` the same path as above would be `please_work_model_992.R`
+
+    -   To access a directory above your current one use `../`. E.g. `../models/cool_model_v1.R`
+
+### Setting paths in R
+
+From here on the code presented is related to the files present in the `intro_to_R_data` available [here](https://github.com/csim063/intro_to_R_data).
+
+#### 1. Use the full path
+
+```{r}
+# Lines after "#" are comments and are not run by R
+
+# Check whether file "i_exist.txt" exists (it should)
+# Note this path is specific to my personal computer 
+#   and you will need to alter yours to work
+
+file.exists("C:/i_exist.txt")
+```
+
+-   Independent to changes in position of working
+
+-   Often long, clunky, and not easy to work with
+
+-   Not reusable or repeatable.
+
+-   Not recommended
+
+#### 2. Use `setwd()`
+
+**DO NOT DO THIS**
+
+```{r}
+# Save your current working directory to be able
+#   to follow the rest of the tutorial
+original_wd <- getwd() #get current working directory
+
+setwd("C:/")
+file.exists("i_exist.txt")
+
+# Reset working directory
+setwd(original_wd)
+```
+
+#### 3. Projects (Rproj)
+
+Projects automatically set your working directory to the directory containing the project, specifically containing the `.Rproj` file.
+
+```{r}
+file.exists("data/i_exist.txt")
+```
+
+As the working directory is always where the `.Rproj` file is if you share the project it is fully reusable\*
+
+*\*Other than package and version dependencies*
+
+## Projects
+
+Projects do more than set your working path they are really useful to divide your work into multiple contexts, each with their own working directory, workspace, history, and source documents. Can be used as self contained units devoted to one thing, e.g. a paper or chapter of a thesis.
+
+### Creating projects
+
+File \> New Project
+
+![](figures/projects.png)
+
+When a new project is created RStudio:
+
+1.  Creates a project file (with an .Rproj extension) within the project directory. This file contains various project options (discussed below) and can also be used as a shortcut for opening the project directly from the filesystem.
+
+2.  Creates a hidden directory (named .Rproj.user) where project-specific temporary files (e.g. auto-saved source documents, window-state, etc.) are stored. This directory is also automatically added to .Rbuildignore, .gitignore, etc. if required.
+
+3.  Loads the project into RStudio and display its name in the Projects toolbar (which is located on the far right side of the main toolbar)
+
+## R related file types
+
+`.R` - R script file. The basic R building block type file
+
+`.Rproj` - R project file containing all the details relevant to an individual R project
+
+`.Rmd` - R markdown, a file format for making dynamic documents with R
+
+`.qmd` - Quarto, an updated and improved version of R markdown
+
+`.rdata` - Data file that contains your work space, i.e. the state of data at the point of saving, means you do not need to rerun code
+
+`.rds` - Unique R data file format. The .rds file format is usually smaller than its text file counterpart and will therefore take up less storage space. The .rds file will also preserve data types and classes such as factors and dates eliminating the need to redefine data types after loading the file.
+
+`.shp` - a file extension for one of the primary file types used for representation of ESRI Shapefile, spatial data
+
+`.csv` - comma-separated values. A delimited text file that uses a comma to separate values. Likely the most common standard data format used
+
+## Loading data
+
+Within `data/` there is an example data set containing tree modelling parameters called `demography.csv`. This data will form the basis of the discussion on data types and structures.
+
+```{r}
+# Load the data use the base library function
+tree_dem <- read.csv("data/demography.csv")
+
+# Alternative import which can be faster for large data
+# install.packages("data.table")
+# library("data.table")
+# tree_dem <- data.table::fread("data/demography.csv")
+```
+
+## Data types
+
+First lets look what type of data is in `tree_dem`
+
+```{r}
+str(tree_dem)
+```
+
+`chr` - character or string values. Any element contained between `' '` or `" "` are characters or strings
+
+`int` - integer. Data type specifies real values without decimal points e.g. 1. Often printed with suffix L to specify integer data
+
+`num` - numeric. Data type represents all real numbers with or without decimal values e.g. 1.1. Integers are a subset of numeric
+
+`logi` - logical. Data type with only two boolean values `TRUE` or `FALSE`.
+
+Null or missing values are represented in R by `NA`. It is a logical constant of length 1 which contains a missing value indicator. `NA` can be coerced to any other data type.
+
+## Data structures
+
+Data structures are often discussed as data types so don't get confused if you do not see the same distinction else where
+
+![](figures/0%20MgEQsDgZZ7fJcdhZ.png)
+
+### Elements
+
+The most basic element of data containing a single value.
+
+```{r}
+x <- 9 # x is a single element
+
+# Access element in first row and first column 
+tree_dem[1,1]
+```
+
+### Vectors
+
+A vector is a collection of elements of the same type
+
+```{r}
+vector() # empty 'logical' vector
+vector("character", length = 3) # a vector of mode 'character' with 3 elements
+numeric(5)   # a numeric vector with 5 elements
+```
+
+You will almost never create vectors like this but rather define them explicitly.
+
+```{r}
+c("a", "b", "c") #c() concatenates the elements within
+```
+
+Or accessed from your data
+
+```{r}
+tree_dem[[3]]
+```
+
+### Matrix
+
+In R matrices are an extension of vectors. They are not a separate type of object but simply a vector with dimensions; the number of rows and columns.
+
+As with vectors, the elements of a matrix must be of the same data type.
+
+```{r}
+m <- matrix(nrow = 2, ncol = 2)
+m
+```
+
+```{r}
+dim(m)
+```
+
+To build a matrix by hand
+
+```{r}
+matrix(c(1,2,1,2),
+       nrow = 2,
+       ncol = 2)
+```
+
+Note matrices in R are filled column-wise, unless the `byrow = TRUE` argument is specified
+
+### List
+
+Lists act as generic containers. Unlike atomic vectors, the contents of a list are not restricted to a single type and can encompass any mixture of data types. Lists are sometimes called generic vectors, because the elements of a list can by of any type of R object, even lists containing further lists. They are one of the most commonly used data structures in R.
+
+```{r}
+list(1, "b", FALSE, c(1,2,3))
+```
+
+A list can be directly accessed from the example data using the technique below. This creates a named list with each element named to the column name they were in.
+
+```{r}
+as.list(tree_dem[3,])
+```
+
+### Data Frame
+
+A data frame is a very important data type in R. It's the most common data structure for most tabular data and what we use for statistics. A data frame is a *special type of list* where every element of the list has same length (i.e. data frame is a "rectangular" list). This is the default data structure created when using `read.csv()` or `read.table()` , so `tree_dem` is a data frame which we can check with `class()`
+
+```{r}
+class(tree_dem)
+```
+
+To create a data frame from hand
+
+```{r}
+df <- data.frame(col1 = letters[1:10], col2 = 1:10, logic1 = logical(10))
+df
+```

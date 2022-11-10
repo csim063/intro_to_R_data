@@ -1,0 +1,12 @@
+species,growth_form,max_hgt,max_dbh,shade_tolerance,repro_age,seed_prod,ldd_dispersal_dist,gap_maker,regen_height,supp_mortality,herbivory,edge_response,seedling_survival,sapling_survival,native
+Pipexc,1,35,1.2,0.25,20,10,30,1,35,0.025,0.8,0.1,0.5,0.7,TRUE
+Melram,1,15,0.5,0.4,10,10,30,0,35,0.125,0.5,0.5,0.5,0.7,TRUE
+Launov,1,35,1.2,0.25,20,10,30,,35,0.025,0.5,0.1,0.5,,
+Hedarb,1,6,0.3,0.4,10,,30,0,35,0.125,0.5,0.3,0.6,0.7,TRUE
+Daccup,,12,0.6,0.55,10,10,30,0,35,0.125,0.8,1,,0.8,TRUE
+Beitaw,1,35,2,0.35,20,10,30,1,35,0.1,0.1,0.1,0.4,0.6,TRUE
+Agaaus,2,10,0.45,0.25,2,10,30,0,35,0.025,0.1,0.1,0.5,0.7,TRUE
+Cyadea,1,15,0.9,0.1,10,10,30,1,35,0.125,0.1,1,0.5,0.7,TRUE
+Protcyn,3,12,0.2,,2,10,30,0,35,0.125,0.1,0.3,0.2,0.5,FALSE
+,3,4,0.2,0.1,10,10,30,0,35,0.125,0.1,,0.6,0.8,FALSE
+Adadig,3,23,4.3,0.1,,10,30,1,35,0.125,0.1,0.3,0.2,0.4,FALSE
